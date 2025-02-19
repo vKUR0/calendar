@@ -1,3 +1,8 @@
 Options -Indexes
+
 RewriteEngine On
-RewriteRule ^$ public/index.php [L]
+
+DirectoryIndex public/index.php
+# Rediriger précisément localhost/calendar/ vers /public/index.php
+RewriteCond %{REQUEST_URI} ^/calendar/$
+RewriteRule ^$ /calendar/public/index.php [R=301,L]
