@@ -2,7 +2,7 @@
 <div class="container mt-5">
     <h2>Inscription</h2>
     <form action="../controllers/auth.php" method="POST">
-        <input type="hidden" name="csrf_token" value="<?= generateCsrfToken(); ?>">
+        <!-- <input type="hidden" name="csrf_token" value="= generateCsrfToken(); "> -->
         <div class="mb-3">
             <label>Nom</label>
             <input type="text" name="nom" class="form-control" required>

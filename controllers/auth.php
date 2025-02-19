@@ -6,9 +6,9 @@ require_once '../config/csrf.php';
 $user = new User($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!verifyCsrfToken($_POST['csrf_token'])) {
-        die("Token CSRF invalide !");
-    }
+    // if (!verifyCsrfToken($_POST['csrf_token'])) {
+    //     die("Token CSRF invalide !");
+    // }
 
     if (isset($_POST['register'])) {
         $user->register($_POST['nom'], $_POST['prenom'], $_POST['date_naissance'], $_POST['adresse'], $_POST['telephone'], $_POST['email'], $_POST['mot_de_passe']);
