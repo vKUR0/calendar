@@ -3,6 +3,7 @@
     <h2>Connexion</h2>
     <form action="../controllers/auth.php" method="POST">
         <!-- <input type="hidden" name="csrf_token" value="= generateCsrfToken(); "> -->
+         
         <div class="mb-3">
             <label>Email</label>
             <input type="email" name="email" class="form-control" required>
