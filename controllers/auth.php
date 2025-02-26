@@ -28,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mail($email, $subject, $message, $headers);
 
         echo "Un e-mail de confirmation a été envoyé. Vérifiez votre boîte mail.";
+        $user->register($_POST['nom'], $_POST['prenom'], $_POST['date_naissance'], $_POST['adresse'], $_POST['telephone'], $email, $_POST['password'], $activation_token);
     }
 
     if (isset($_POST['login'])) {
