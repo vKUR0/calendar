@@ -23,5 +23,11 @@ class Appointment {
         $stmt = $this->pdo->prepare("DELETE FROM rendezvous WHERE id = ?");
         return $stmt->execute([$id]);
     }
+
+    public function isSlotAvailable($date_heure) {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM rendezvous WHERE date_heure = ?");
+        $stmt->execute([$date_heure]);
+        return $stmt->fetchColumn() == 0;
+    }
 }
 ?>
