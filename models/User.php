@@ -8,12 +8,6 @@ class User {
         $this->pdo = $pdo;
     }
 
-    public function register($nom, $prenom, $date_naissance, $adresse, $telephone, $email, $mot_de_passe) {
-        $hashed_password = password_hash($mot_de_passe, PASSWORD_BCRYPT);
-        $stmt = $this->pdo->prepare("INSERT INTO users (nom, prenom, date_naissance, adresse, telephone, email, mot_de_passe) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        return $stmt->execute([$nom, $prenom, $date_naissance, $adresse, $telephone, $email, $hashed_password]);
-    }
-
     public function login($email, $mot_de_passe) {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = ?");
         $stmt->execute([$email]);
@@ -37,6 +31,23 @@ class User {
         $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
         $stmt->execute([$email]);
         return $stmt->fetchColumn() == 0;
+    }
+
+    public function register($nom, $prenom, $date_naissance, $adresse, $telephone, $email, $mot_de_passe, $activation_token) {
+        $hashed_password = password_hash($mot_de_passe, PASSWORD_BCRYPT);
+        $stmt = $this->pdo->prepare("INSERT INTO users (nom, prenom, date_naissance, adresse, telephone, email, mot_de_passe, activation_token, email_verifie) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)");
+        return $stmt->execute([$nom, $prenom, $date_naissance, $adresse, $telephone, $email, $hashed_password, $activation_token]);
+    }
+
+    public function activateUser($token) {
+        $stmt = $this->pdo->prepare("UPDATE users SET email_verifie = 1, activation_token = NULL WHERE activation_token = ?");
+        return $stmt->execute([$token]);
+    }
+
+    public function isEmailVerified($email) {
+        $stmt = $this->pdo->prepare("SELECT email_verifie FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        return $stmt->fetchColumn() == 1;
     }
 }
 ?>
