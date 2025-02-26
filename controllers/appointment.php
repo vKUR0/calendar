@@ -29,8 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    if (isset($_POST['cancel'])) {
-        $appointment->cancelAppointment($_POST['id']);
+    if (isset($_POST['cancel']) && isset($_POST['appointment_id'])) {
+        $appointment->cancelAppointment($_POST['appointment_id']);
         header("Location: ../views/profile.php");
         exit();
     }

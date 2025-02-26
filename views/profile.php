@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Récupérer les rendez-vous de l'utilisateur dès l'affichage de la page
+// Récupérer les rendez-vous de l'utilisateur
 $appointment = new Appointment($pdo);
 $appointments = $appointment->getUserAppointments($_SESSION['user_id']);
 ?>
@@ -22,15 +22,19 @@ $appointments = $appointment->getUserAppointments($_SESSION['user_id']);
     <?php if (!empty($appointments)): ?>
         <ul class="list-group mt-3">
             <?php foreach ($appointments as $appointment): ?>
-                <li class="list-group-item">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
                     📅 Rendez-vous prévu le <strong><?= date('d/m/Y H:i', strtotime($appointment['date_heure'])) ?></strong>
+                    <form action="../controllers/appointment.php" method="POST" class="d-inline">
+                        <input type="hidden" name="appointment_id" value="<?= $appointment['id']; ?>">
+                        <!-- <input type="hidden" name="csrf_token" value="= generateCsrfToken(); "> -->
+                        <button type="submit" name="cancel" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous vraiment annuler ce rendez-vous ?')">Annuler</button>
+                    </form>
                 </li>
             <?php endforeach; ?>
         </ul>
     <?php else: ?>
         <p class="mt-3">Aucun rendez-vous pris.</p>
     <?php endif; ?>
-    <a href="../views/calendar.php" class="btn btn-success">Prendre rendez-vous</a>
 </div>
 
 <?php include '../views/footer.php'; ?>

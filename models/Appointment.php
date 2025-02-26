@@ -18,7 +18,6 @@ class Appointment {
         $stmt->execute([$user_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
 
     public function cancelAppointment($id) {
         $stmt = $this->pdo->prepare("DELETE FROM rendezvous WHERE id = ?");
