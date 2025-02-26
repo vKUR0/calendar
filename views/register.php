@@ -1,4 +1,8 @@
 <?php include '../views/header.php'; ?>
+<?php if (isset($_SESSION['error'])): ?>
+    <div class="alert alert-danger"><?= $_SESSION['error']; ?></div>
+    <?php unset($_SESSION['error']);?>
+<?php endif; ?>
 <div class="container mt-5">
     <h2>Inscription</h2>
     <form action="../controllers/auth.php" method="POST">
@@ -34,4 +38,3 @@
         <button type="submit" name="register" class="btn btn-primary">S'inscrire</button>
     </form>
 </div>
-<?php include '../views/footer.php'; ?>

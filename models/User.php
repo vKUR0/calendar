@@ -32,5 +32,11 @@ class User {
         $stmt = $this->pdo->prepare("DELETE FROM users WHERE id = ?");
         return $stmt->execute([$user_id]);
     }
+
+    public function isEmailAvailable($email) {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        return $stmt->fetchColumn() == 0;
+    }
 }
 ?>

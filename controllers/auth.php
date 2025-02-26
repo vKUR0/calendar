@@ -11,6 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // }
 
     if (isset($_POST['register'])) {
+
+        if (!$user->isEmailAvailable($_POST['email'])) {
+            session_start();
+            $_SESSION['error'] = "Cette adresse email est déja prise !";
+            header("Location: ../views/register.php");
+            exit();
+        }
+
         $user->register($_POST['nom'], $_POST['prenom'], $_POST['date_naissance'], $_POST['adresse'], $_POST['telephone'], $_POST['email'], $_POST['mot_de_passe']);
         header("Location: ../views/login.php");
         exit();
