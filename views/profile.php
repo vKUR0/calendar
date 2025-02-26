@@ -35,6 +35,7 @@ $appointments = $appointment->getUserAppointments($_SESSION['user_id']);
     <?php else: ?>
         <p class="mt-3">Aucun rendez-vous pris.</p>
     <?php endif; ?>
+    <a href="calendar.php" class="btn btn-primary mt-3">Prendre un rendez-vous</a>
 </div>
 
 <?php include '../views/footer.php'; ?>

@@ -17,7 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // }
 
     if (isset($_POST['book'])) {
-        $appointment->bookAppointment($_SESSION['user_id'], $_POST['date_heure']);
+        $date = $_POST['date'];
+        $heure = $_POST['heure'];
+        $date_heure = $date . ' ' . $heure . ':00';
+
+        $timestamp = strtotime($date_heure);
+        $minutes = date("i", $timestamp);
+        if ($minutes % 30 !== 0) {
+            die("Erreur : Créneau invalide.");
+        }
+
+        $appointment->bookAppointment($_SESSION['user_id'], $date_heure);
         header("Location: ../views/profile.php");
         exit();
     }
