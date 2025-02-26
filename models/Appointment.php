@@ -14,10 +14,11 @@ class Appointment {
     }
 
     public function getUserAppointments($user_id) {
-        $stmt = $this->pdo->prepare("SELECT * FROM rendezvous WHERE user_id = ?");
+        $stmt = $this->pdo->prepare("SELECT * FROM rendezvous WHERE user_id = ? ORDER BY date_heure ASC");
         $stmt->execute([$user_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
 
     public function cancelAppointment($id) {
         $stmt = $this->pdo->prepare("DELETE FROM rendezvous WHERE id = ?");

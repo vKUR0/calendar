@@ -22,6 +22,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
+    if (isset($_POST['getUserAppointments'])) {
+        $appointments = $appointment->getUserAppointments($_SESSION['user_id']);
+        $_SESSION['appointments'] = $appointments;
+        header("Location: ../views/profile.php");
+        exit();
+    }
+
     if (isset($_POST['cancel'])) {
         $appointment->cancelAppointment($_POST['id']);
         header("Location: ../views/profile.php");
