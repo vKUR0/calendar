@@ -40,5 +40,6 @@ $appointments = getUserAppointments($pdo, $_SESSION['user_id']);
         <p class="mt-3">Aucun rendez-vous pris.</p>
     <?php endif; ?>
     <a href="calendar.php" class="btn btn-primary mt-3">Prendre un rendez-vous</a>
+    <a href="edit_profile.php" class="btn btn-warning mt-3">Modifier mon profil</a>
 </div>
 
