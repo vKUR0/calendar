@@ -1,12 +1,19 @@
-<?php include '../views/header.php'; ?>
+<?php 
+include '../views/header.php'; 
+require_once '../config/csrf.php'; // Inclusion du fichier CSRF
+?>
+
 <?php if (isset($_SESSION['error'])): ?>
     <div class="alert alert-danger"><?= $_SESSION['error']; ?></div>
-    <?php unset($_SESSION['error']);?>
+    <?php unset($_SESSION['error']); ?>
 <?php endif; ?>
+
 <div class="container mt-5">
     <h2>Inscription</h2>
     <form action="../controllers/auth.php" method="POST">
-        <!-- <input type="hidden" name="csrf_token" value="= generateCsrfToken(); "> -->
+        <!-- Ajout du token CSRF -->
+        <input type="hidden" name="csrf_token" value="<?php echo generateCsrfToken(); ?>">
+
         <div class="mb-3">
             <label>Nom</label>
             <input type="text" name="nom" class="form-control" required>
@@ -38,3 +45,4 @@
         <button type="submit" name="register" class="btn btn-primary">S'inscrire</button>
     </form>
 </div>
+

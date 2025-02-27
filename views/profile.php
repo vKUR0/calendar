@@ -1,6 +1,7 @@
 <?php
 include '../views/header.php';
 require_once '../config/database.php';
+require_once '../config/csrf.php'; // Inclusion du fichier CSRF
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -12,6 +13,7 @@ function getUserAppointments($pdo, $user_id) {
     $stmt->execute([$user_id]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 $appointments = getUserAppointments($pdo, $_SESSION['user_id']);
 ?>
 
@@ -27,8 +29,8 @@ $appointments = getUserAppointments($pdo, $_SESSION['user_id']);
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     📅 Rendez-vous prévu le <strong><?= date('d/m/Y H:i', strtotime($appointment['date_heure'])) ?></strong>
                     <form action="../controllers/appointment.php" method="POST" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="<?php echo generateCsrfToken(); ?>"> <!-- Ajout du token CSRF -->
                         <input type="hidden" name="appointment_id" value="<?= $appointment['id']; ?>">
-                        <!-- <input type="hidden" name="csrf_token" value="= generateCsrfToken(); "> -->
                         <button type="submit" name="cancel" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous vraiment annuler ce rendez-vous ?')">Annuler</button>
                     </form>
                 </li>
@@ -40,4 +42,3 @@ $appointments = getUserAppointments($pdo, $_SESSION['user_id']);
     <a href="calendar.php" class="btn btn-primary mt-3">Prendre un rendez-vous</a>
 </div>
 
-<?php include '../views/footer.php'; ?>

@@ -34,9 +34,11 @@ function isSlotAvailable($pdo, $date_heure) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // if (!verifyCsrfToken($_POST['csrf_token'])) {
-    //     die("Token CSRF invalide !");
-    // }
+
+    // Vérification du token CSRF avant toute action
+    if (!isset($_POST['csrf_token']) || !verifyCsrfToken($_POST['csrf_token'])) {
+        die("Erreur CSRF : Requête invalide !");
+    }
 
     if (isset($_POST['book'])) {
         $date = $_POST['date'];

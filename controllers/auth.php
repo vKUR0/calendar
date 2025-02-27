@@ -49,6 +49,12 @@ function deleteUser($pdo, $user_id) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // Vérification du token CSRF avant toute action sensible
+    if (!isset($_POST['csrf_token']) || !verifyCsrfToken($_POST['csrf_token'])) {
+        die("Erreur CSRF : Requête invalide !");
+    }
+
     if (isset($_POST['register'])) {
         $email = $_POST['email'];
         if (!isEmailAvailable($pdo, $email)) {
