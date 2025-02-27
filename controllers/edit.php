@@ -34,17 +34,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$user_id]);
         
         // Déconnexion et redirection vers la page d'accueil
+        session_unset();
         session_destroy();
         header("Location: ../views/login.php?account_deleted=success");
         exit();
     }
     
     // Récupération des nouvelles valeurs
-    $nom = $_POST['nom'];
-    $prenom = $_POST['prenom'];
-    $email = $_POST['email'];
-    $adresse = $_POST['adresse'];
-    $telephone = $_POST['telephone'];
+    $nom = htmlspecialchars(trim($_POST['nom']));
+    $prenom = htmlspecialchars(trim($_POST['prenom']));
+    $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+    $adresse = htmlspecialchars(trim($_POST['adresse']));
+    $telephone = preg_match('/^\+?[0-9]{7,15}$/', $_POST['telephone']) ? $_POST['telephone'] : null;
+
     
     // Vérification si le mot de passe doit être modifié
     if (!empty($_POST['password'])) {

@@ -2,7 +2,14 @@
 require_once '../config/database.php';
 
 if (isset($_GET['token'])) {
-    $token = $_GET['token'];
+    $token = preg_replace('/[^a-f0-9]/', '', $_GET['token']);
+
+    
+    if (!preg_match('/^[a-f0-9]{64}$/', $token)) {
+        header("Location: ../views/login.php?activation=error");
+        exit();
+    }
+
 
     // Vérification que le token existe avant de mettre à jour
     $stmt = $pdo->prepare("SELECT id FROM users WHERE activation_token = ?");

@@ -41,8 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_POST['book'])) {
-        $date = $_POST['date'];
-        $heure = $_POST['heure'];
+        $date = htmlspecialchars($_POST['date']);
+        $heure = htmlspecialchars($_POST['heure']);
         $date_heure = $date . ' ' . $heure . ':00';
 
         $timestamp = strtotime($date_heure);

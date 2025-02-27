@@ -12,6 +12,13 @@ function isEmailAvailable($pdo, $email) {
 }
 
 function registerUser($pdo, $nom, $prenom, $date_naissance, $adresse, $telephone, $email, $mot_de_passe) {
+    $nom = htmlspecialchars(trim($nom));
+    $prenom = htmlspecialchars(trim($prenom));
+    $adresse = htmlspecialchars(trim($adresse));
+    $telephone = preg_match('/^\+?[0-9]{7,15}$/', $telephone) ? $telephone : null;
+    $email = filter_var($email, FILTER_VALIDATE_EMAIL);
+    
+    
     $hashed_password = password_hash($mot_de_passe, PASSWORD_BCRYPT);
     $activation_token = bin2hex(random_bytes(32));
     
@@ -31,6 +38,11 @@ function isEmailVerified($pdo, $email) {
 }
 
 function loginUser($pdo, $email, $mot_de_passe) {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = "Email invalide.";
+        return false;
+    }
+
     $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
     $stmt->execute([$email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -52,7 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Vérification du token CSRF avant toute action sensible
     if (!isset($_POST['csrf_token']) || !verifyCsrfToken($_POST['csrf_token'])) {
-        die("Erreur CSRF : Requête invalide !");
+        $_SESSION['error'] = "Erreur CSRF : Requête invalide !";
+        header("Location: ../views/login.php");
+        exit();
     }
 
     if (isset($_POST['register'])) {
@@ -64,8 +78,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         if (registerUser($pdo, $_POST['nom'], $_POST['prenom'], $_POST['date_naissance'], $_POST['adresse'], $_POST['telephone'], $email, $_POST['password'])) {
-            echo "Un e-mail de confirmation a été envoyé. Vérifiez votre boîte mail.";
+            $_SESSION['success'] = "Un e-mail de confirmation a été envoyé. Vérifiez votre boîte mail.";
         }
+        header("Location: ../views/register.php");
+        exit();
     }
 
     if (isset($_POST['login'])) {
@@ -73,18 +89,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $password = $_POST['password'];
         
         if (!isEmailVerified($pdo, $email)) {
-            die("Erreur : Votre e-mail n'a pas encore été vérifié. Veuillez vérifier vos e-mails.");
+            $_SESSION['error'] = "Votre e-mail n'a pas encore été vérifié.";
+            header("Location: ../views/login.php");
+            exit();
         }
         
         if (loginUser($pdo, $email, $password)) {
             header("Location: ../views/profile.php");
         } else {
-            echo "Identifiants incorrects.";
+            header("Location: ../views/login.php");
         }
+        exit();
     }
 }
 
-if (isset($_GET['logout'])) {
+if (isset($_GET['logout']) && isset($_GET['csrf_token']) && verifyCsrfToken($_GET['csrf_token'])) {
     session_destroy();
     header("Location: ../views/login.php");
     exit();
