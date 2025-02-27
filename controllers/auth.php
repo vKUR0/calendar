@@ -50,6 +50,7 @@ function loginUser($pdo, $email, $mot_de_passe) {
     if ($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $user['prenom'] . " " . $user['nom'];
+        $_SESSION['user_email'] = $email;
         return true;
     }
     return false;
@@ -80,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (registerUser($pdo, $_POST['nom'], $_POST['prenom'], $_POST['date_naissance'], $_POST['adresse'], $_POST['telephone'], $email, $_POST['password'])) {
             $_SESSION['success'] = "Un e-mail de confirmation a été envoyé. Vérifiez votre boîte mail.";
         }
-        header("Location: ../views/register.php");
+        header("Location: ../views/login.php");
         exit();
     }
 
@@ -103,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-if (isset($_GET['logout']) && isset($_GET['csrf_token']) && verifyCsrfToken($_GET['csrf_token'])) {
+if (isset($_GET['logout'])) {
     session_destroy();
     header("Location: ../views/login.php");
     exit();

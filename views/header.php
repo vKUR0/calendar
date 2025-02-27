@@ -21,6 +21,7 @@ if (session_status() == PHP_SESSION_NONE) {
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../views/contact.php">Contact</a></li>
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <li class="nav-item"><a class="nav-link" href="../views/profile.php">Profil</a></li>
                     <li class="nav-item"><a class="nav-link" href="../controllers/auth.php?logout=true">Déconnexion</a></li>

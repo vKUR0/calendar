@@ -2,6 +2,14 @@
 include '../views/header.php'; 
 require_once '../config/csrf.php'; // Assurez-vous que la fonction generateCsrfToken() est bien incluse
 ?>
+<?php if (isset($_SESSION['error'])): ?>
+    <div class="alert alert-danger"><?= $_SESSION['error']; ?></div>
+    <?php unset($_SESSION['error']); ?>
+<?php endif; ?>
+<?php if (isset($_SESSION['success'])): ?>
+    <div class="alert alert-success "><?= $_SESSION['success']; ?></div>
+    <?php unset($_SESSION['success']); ?>
+<?php endif; ?>
 
 <div class="container mt-5">
     <h2>Connexion</h2>

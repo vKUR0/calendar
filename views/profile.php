@@ -19,7 +19,7 @@ $appointments = getUserAppointments($pdo, $_SESSION['user_id']);
 
 <div class="container mt-5">
     <h2>Mon Profil</h2>
-    <p>Bienvenue, <?php echo $_SESSION['user_name']; ?></p>
+    <p>Bienvenue, <?php echo $_SESSION['user_name'];?></p>
 
     <!-- Affichage automatique des rendez-vous -->
     <h3 class="mt-4">Mes rendez-vous</h3>
