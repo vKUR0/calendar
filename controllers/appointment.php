@@ -2,7 +2,10 @@
 require_once '../config/database.php';
 require_once '../config/csrf.php';
 
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../views/login.php");
     exit();

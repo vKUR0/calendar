@@ -1,16 +1,18 @@
 <?php
 include '../views/header.php';
 require_once '../config/database.php';
-require_once '../models/Appointment.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-// Récupérer les rendez-vous de l'utilisateur
-$appointment = new Appointment($pdo);
-$appointments = $appointment->getUserAppointments($_SESSION['user_id']);
+function getUserAppointments($pdo, $user_id) {
+    $stmt = $pdo->prepare("SELECT * FROM rendezvous WHERE user_id = ? ORDER BY date_heure ASC");
+    $stmt->execute([$user_id]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+$appointments = getUserAppointments($pdo, $_SESSION['user_id']);
 ?>
 
 <div class="container mt-5">
