@@ -25,7 +25,7 @@ function registerUser($pdo, $nom, $prenom, $date_naissance, $adresse, $telephone
     $stmt = $pdo->prepare("INSERT INTO users (nom, prenom, date_naissance, adresse, telephone, email, mot_de_passe, activation_token, email_verifie) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)");
     if ($stmt->execute([$nom, $prenom, $date_naissance, $adresse, $telephone, $email, $hashed_password, $activation_token])) {
         $activation_link = "http://localhost/calendar/controllers/verify.php?token=" . $activation_token;
-        mail($email, "Vérification de votre adresse e-mail", "Bonjour, cliquez sur ce lien pour activer votre compte : $activation_link", "From: your-email@localhost");
+        mail($email, "Vérification de votre adresse e-mail", "Bonjour, cliquez sur ce lien pour activer votre compte : $activation_link", "From: gcesiea@gmail.com");
         return true;
     }
     return false;
