@@ -4,6 +4,11 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 require_once '../config/database.php';
 require_once '../config/csrf.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require '../vendor/autoload.php';
+
+
 
 function isEmailAvailable($pdo, $email) {
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
@@ -23,9 +28,22 @@ function registerUser($pdo, $nom, $prenom, $date_naissance, $adresse, $telephone
     $activation_token = bin2hex(random_bytes(32));
     
     $stmt = $pdo->prepare("INSERT INTO users (nom, prenom, date_naissance, adresse, telephone, email, mot_de_passe, activation_token, email_verifie) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)");
+    $mail = new PHPMailer(true);
+    $mail->isSMTP();
+    $mail->Host = 'smtp.gmail.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'gcesiea@gmail.com'; // Remplace avec ton email
+    $mail->Password = 'dcpv qjxd zjmt nvsx'; // Utilise un mot de passe d'application si 2FA activé
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Ou PHPMailer::ENCRYPTION_SMTPS
+    $mail->Port = 587; // 465 si SMTPS
+
+    $mail->setFrom('gcesiea@gmail.com');
+    $mail->addAddress($email);
+    $mail->Subject = 'Vérification de votre adresse e-mail';
+    $mail->Body = "Bonjour, cliquez sur ce lien pour activer votre compte : http://localhost/calendar/controllers/verify.php?token=$activation_token";
     if ($stmt->execute([$nom, $prenom, $date_naissance, $adresse, $telephone, $email, $hashed_password, $activation_token])) {
         $activation_link = "http://localhost/calendar/controllers/verify.php?token=" . $activation_token;
-        mail($email, "Vérification de votre adresse e-mail", "Bonjour, cliquez sur ce lien pour activer votre compte : $activation_link", "From: gcesiea@gmail.com");
+        $mail->send();
         return true;
     }
     return false;
